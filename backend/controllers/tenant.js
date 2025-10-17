@@ -1,9 +1,11 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { Tenant, User, Products, Orders } from "../models/association.js";
+// import { Tenant, User, Products } from "../models/association.js";
+import { Tenant } from "../models/association.js";
+import  Orders  from "../models/orders.js";
 import Sequelize from "sequelize";
 import { sequelize } from "../config/index.js";
-let tables = [User, Products, Orders]
+// let tables = [User, Products, Orders];
 let signUp = async (req, res) => {
   try {
     let data = req.body;
@@ -11,8 +13,8 @@ let signUp = async (req, res) => {
 
     let info = await Tenant.create(data, { logging: console.log });
     // let random = (Math.random() * 100).toString(36);
-    const dbname = `Qbot_tenant_${(data.name).replaceAll(" ","_")}`;
-    console.log(dbname)
+    const dbname = `Qbot_tenant_${data.name.replaceAll(" ", "_")}`;
+    console.log(dbname);
     let db = await sequelize.query(`CREATE DATABASE IF NOT EXISTS ${dbname}`);
 
     const instance = new Sequelize(
@@ -28,16 +30,17 @@ let signUp = async (req, res) => {
         },
       }
     );
-    
-    for (const table of tables) {
-        // const temp = await table(instance);
-        await instance.sync();
-    }
+
+    // for (const table of tables) {
+    // const temp = await table(instance);
+    Orders(instance);
+    await instance.sync();
+    // }
 
     res.status(200).json({
       log: "Tenat SucessFully Created",
       data: info,
-      database : db 
+      database: db,
     });
   } catch (error) {
     res.status(500).json({

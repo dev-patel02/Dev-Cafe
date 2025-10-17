@@ -2,16 +2,17 @@ import express, { Router } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import router from "./routes/index.js";
-import {
-  Master,
-  Orders,
-  Products,
-  Tenant,
-  User,
-} from "./models/association.js";
+import { Master, Tenant } from "./models/association.js";
+// import {
+//   Master,
+//   Orders,
+//   Products,
+//   Tenant,
+//   User,
+// } from "./models/association.js";
 import { connectDB } from "./config/index.js";
 
-dotenv.config({quiet:true});
+dotenv.config({ quiet: true });
 const app = express();
 
 app.use(cors());
